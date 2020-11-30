@@ -5,8 +5,14 @@ import 'react-calendar/dist/Calendar.css';
 import styled from 'styled-components'
 import axios from 'axios'
 
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import ListGroup from 'react-bootstrap/ListGroup'
+import Day from '../Questions/Day'
 const Home = styled.div`
-  // text-align: center;
+  text-align: center;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -37,42 +43,50 @@ const Questions = () => {
   }, [questions.length])
   const [value, onChange] = useState(new Date());
 
-  const list = questions.map(question => {
+  const questionCards = questions.map(question => {
+    const q = <Question key={question.attributes.publish_date} attributes={question.attributes} qotd={question.attributes.qotd} />
     return (
-      <Question
-        key={question.attributes.publish_date}
-        attributes={question.attributes}
-      />
+      <Day key={question.attributes.publish_date} content={q} publish_date={question.attributes.publish_date} />
     )
   })
+
+  const daysList = null
+
   return (
-    <Home>
-      <div className="header">
-        <h1>Question Of The Day</h1>
-      </div>
-      {/* <ul>{list}</ul> */}
-      <HomeBody>
-        <div className="questionsPlanner" >
-          <div className="calendar">
-            <div>Select a Day</div>
-            <Calendar
-              onChange={onChange}
-              value={value}
-            />
-          </div>
-        </div>
-        <div className="questionPanel">
-          <div className="week">
-            {list}
-          </div>
-        </div>
-        <div className="AnswersPanel">
-          <div className="answers">
-            <div>Answers Panel</div>
-          </div>
-        </div>
-      </HomeBody>
-    </Home>
+    <Fragment>
+      <Header>
+        <Navbar bg="dark" variant="dark">
+          <Navbar.Brand>QOTD</Navbar.Brand>
+        </Navbar>
+      </Header>
+      <Container fluid>
+        <Row>
+          <Col className="questionsPlanner" >
+            <div className="calendar">
+              <div>Select a Day</div>
+              <Calendar
+                onChange={onChange}
+                width="100%"
+                value={value}
+              />
+              <p>
+                20 Respondets to your question yesterday! Check it out.
+              </p>
+            </div>
+          </Col>
+          <Col className="questionPanel">
+            <ListGroup className="week">
+              {questionCards}
+            </ListGroup>
+          </Col>
+          <Col className="AnswersPanel">
+            <div className="answers">
+              <div>Responses</div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </Fragment>
   )
 }
 
